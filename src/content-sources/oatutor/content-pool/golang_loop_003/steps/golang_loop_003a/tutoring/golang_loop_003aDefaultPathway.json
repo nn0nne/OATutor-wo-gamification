@@ -1,0 +1,88 @@
+[
+    {
+        "id": "golang_loop_003a-h1",
+        "type": "scaffold",
+        "problemType": "CodeEditor",
+        "answerType": "string",
+        "hintAnswer": [
+            "package main\n\nfunc main() {\n    \n}"
+        ],
+        "dependencies": [],
+        "title": "Struktur Program Dasar",
+        "text": "Pertama, buat struktur program dasar dengan package main dan func main",
+        "variabilization": {},
+        "oer": "",
+        "license": "",
+        "hintType": "code",
+        "language": "go",
+        "version": "1.16.2",
+        "filename": "main.go",
+        "expectedOutput": ""
+    },
+    {
+        "id": "golang_loop_003a-h2",
+        "type": "scaffold",
+        "problemType": "CodeEditor",
+        "answerType": "string",
+        "hintAnswer": [
+            "package main\n\nfunc main() {\n    for i := 2; i <= 5; i++ {\n        \n    }\n}"
+        ],
+        "dependencies": [
+            "golang_loop_003a-h1"
+        ],
+        "title": "Menambahkan Perulangan",
+        "text": "Tambahkan perulangan for dengan variabel i mulai dari 2 sampai 5",
+        "variabilization": {},
+        "oer": "",
+        "license": "",
+        "hintType": "code",
+        "language": "go",
+        "version": "1.16.2",
+        "filename": "main.go",
+        "expectedOutput": ""
+    },
+    {
+        "id": "golang_loop_003a-h3",
+        "type": "scaffold",
+        "problemType": "CodeEditor",
+        "answerType": "string",
+        "hintAnswer": [
+            "package main\n\nfunc main() {\n    hasil := 1\n    for i := 2; i <= 5; i++ {\n        hasil = hasil - i\n    }\n}"
+        ],
+        "dependencies": [
+            "golang_loop_003a-h2"
+        ],
+        "title": "Variabel dan Operasi Pengurangan",
+        "text": "Tambahkan variabel hasil sebelum loop dengan nilai awal 1, lalu di dalam loop kurangkan variabel hasil dengan nilai i",
+        "variabilization": {},
+        "oer": "",
+        "license": "",
+        "hintType": "code",
+        "language": "go",
+        "version": "1.16.2",
+        "filename": "main.go",
+        "expectedOutput": ""
+    },
+    {
+        "id": "golang_loop_003a-h4",
+        "type": "scaffold",
+        "problemType": "CodeEditor",
+        "answerType": "string",
+        "hintAnswer": [
+            "package main\n\nimport \"fmt\"\n\nfunc main() {\n    hasil := 1\n    for i := 2; i <= 5; i++ {\n        hasil = hasil - i\n    }\n    fmt.Print(hasil)\n}"
+        ],
+        "dependencies": [
+            "golang_loop_003a-h3"
+        ],
+        "title": "Menampilkan Hasil",
+        "text": "Tambahkan fmt.Print(hasil) untuk menampilkan hasil akhir dan import fmt.",
+        "variabilization": {},
+        "oer": "",
+        "license": "",
+        "hintType": "code",
+        "language": "go",
+        "version": "1.16.2",
+        "filename": "main.go",
+        "expectedOutput": "-13"
+    }
+]

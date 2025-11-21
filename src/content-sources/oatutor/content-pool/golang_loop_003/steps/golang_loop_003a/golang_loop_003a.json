@@ -1,0 +1,14 @@
+{
+    "id": "golang_loop_003a",
+    "stepAnswer": [
+        "-13"
+    ],
+    "problemType": "CodeEditor",
+    "stepTitle": "Hitung jumlah pengurangan 1 sampai 5",
+    "stepBody": "Program harus menghasilkan output: -13",
+    "answerType": "string",
+    "variabilization": {},
+    "language": "go",
+    "version": "1.16.2",
+    "filename": "main.go"
+}

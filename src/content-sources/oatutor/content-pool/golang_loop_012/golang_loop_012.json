@@ -1,0 +1,10 @@
+{
+    "id": "golang_loop_012",
+    "title": "Menghitung Jumlah Bilangan Genap",
+    "body": "Buat program Golang yang menghitung jumlah semua bilangan genap dari 1 sampai 10.",
+    "variabilization": {},
+    "oer": "https://example.com",
+    "license": "https://creativecommons.org/licenses/by/4.0/ <CC BY 4.0>",
+    "lesson": "Module 3 - Problem Solving",
+    "courseName": "Golang Loops Course"
+}

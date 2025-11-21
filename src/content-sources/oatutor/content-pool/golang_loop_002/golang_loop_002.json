@@ -1,0 +1,10 @@
+{
+    "id": "golang_loop_002",
+    "title": "Menampilkan Angka 5 sampai 1",
+    "body": "Buat program Golang yang menampilkan angka dari 5 sampai 1 (decrement)",
+    "variabilization": {},
+    "oer": "https://example.com",
+    "license": "https://creativecommons.org/licenses/by/4.0/ <CC BY 4.0>",
+    "lesson": "Module 1 - Fundamental Loop",
+    "courseName": "Golang Loops Course"
+}

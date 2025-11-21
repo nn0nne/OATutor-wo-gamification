@@ -1,0 +1,14 @@
+{
+    "id": "golang_loop_008a",
+    "stepAnswer": [
+        "125 64 27 8 1 "
+    ],
+    "problemType": "CodeEditor",
+    "stepTitle": "Tampilkan 125 64 27 8 1",
+    "stepBody": "Buat program Golang yang menampilkan output: \"125 64 27 8 1 \" (tanpa kutip)",
+    "answerType": "string",
+    "variabilization": {},
+    "language": "go",
+    "version": "1.16.2",
+    "filename": "main.go"
+}

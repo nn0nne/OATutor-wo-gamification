@@ -1,0 +1,10 @@
+{
+    "id": "golang_loop_006",
+    "title": "Menampilkan Pola Angka Berulang per Baris",
+    "body": "Buat program Golang yang menampilkan pola angka berulang per baris.",
+    "variabilization": {},
+    "oer": "https://example.com",
+    "license": "https://creativecommons.org/licenses/by/4.0/ <CC BY 4.0>",
+    "lesson": "Module 2 - Rekognisi Pola",
+    "courseName": "Golang Loops Course"
+}

@@ -1,0 +1,66 @@
+[
+    {
+        "id": "golang_loop_001a-h1",
+        "type": "scaffold",
+        "problemType": "CodeEditor",
+        "answerType": "string",
+        "hintAnswer": [
+            "package main\n\nfunc main() {\n    }"
+        ],
+        "dependencies": [],
+        "title": "Struktur Program Dasar",
+        "text": "Pertama, kita perlu membuat struktur program Golang dasar dengan package main dan func main",
+        "variabilization": {},
+        "oer": "",
+        "license": "",
+        "hintType": "text",
+        "language": "go",
+        "version": "1.16.2",
+        "filename": "main.go",
+        "expectedOutput": ""
+    },
+    {
+        "id": "golang_loop_001a-h2",
+        "type": "scaffold",
+        "problemType": "CodeEditor",
+        "answerType": "string",
+        "hintAnswer": [
+            "package main\n\nfunc main() {\n    for i := 1; i <= 5; i++ {\n        \n    }\n}"
+        ],
+        "dependencies": [
+            "golang_loop_001a-h1"
+        ],
+        "title": "Perulangan For Increment",
+        "text": "Gunakan perulangan for dengan variabel i mulai dari 1 sampai 5.",
+        "variabilization": {},
+        "oer": "",
+        "license": "",
+        "hintType": "code",
+        "language": "go",
+        "version": "1.16.2",
+        "filename": "main.go",
+        "expectedOutput": ""
+    },
+    {
+        "id": "golang_loop_001a-h3",
+        "type": "scaffold",
+        "problemType": "CodeEditor",
+        "answerType": "string",
+        "hintAnswer": [
+            "package main\n\nimport \"fmt\"\n\nfunc main() {\n    for i := 1; i <= 5; i++ {\n        fmt.Print(i, \" \")\n    }\n}"
+        ],
+        "dependencies": [
+            "golang_loop_001a-h2"
+        ],
+        "title": "Menampilkan Output",
+        "text": "Di dalam perulangan, gunakan fmt.Print(i, \" \") untuk menampilkan angka dan spasi dan import \"fmt\"",
+        "variabilization": {},
+        "oer": "",
+        "license": "",
+        "hintType": "code",
+        "language": "go",
+        "version": "1.16.2",
+        "filename": "main.go",
+        "expectedOutput": "1 2 3 4 5 "
+    }
+]

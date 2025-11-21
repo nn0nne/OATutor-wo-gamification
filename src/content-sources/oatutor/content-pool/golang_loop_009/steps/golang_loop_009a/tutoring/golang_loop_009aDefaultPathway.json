@@ -1,0 +1,88 @@
+[
+    {
+        "id": "golang_loop_009a-h1",
+        "type": "scaffold",
+        "problemType": "CodeEditor",
+        "answerType": "string",
+        "hintAnswer": [
+            "package main\n\nfunc main() {\n    \n}"
+        ],
+        "dependencies": [],
+        "title": "Struktur Program Dasar",
+        "text": "Pertama, buat struktur program dasar dengan package main dan func main",
+        "variabilization": {},
+        "oer": "",
+        "license": "",
+        "hintType": "code",
+        "language": "go",
+        "version": "1.16.2",
+        "filename": "main.go",
+        "expectedOutput": ""
+    },
+    {
+        "id": "golang_loop_009a-h2",
+        "type": "scaffold",
+        "problemType": "CodeEditor",
+        "answerType": "string",
+        "hintAnswer": [
+            "package main\n\nfunc main() {\n    for i := 1; i <= 3; i++ {\n        \n    }\n}"
+        ],
+        "dependencies": [
+            "golang_loop_009a-h1"
+        ],
+        "title": "Perulangan Luar untuk Baris",
+        "text": "Tambahkan perulangan for luar untuk mengiterasi setiap baris dari 1 sampai 3",
+        "variabilization": {},
+        "oer": "",
+        "license": "",
+        "hintType": "code",
+        "language": "go",
+        "version": "1.16.2",
+        "filename": "main.go",
+        "expectedOutput": ""
+    },
+    {
+        "id": "golang_loop_009a-h3",
+        "type": "scaffold",
+        "problemType": "CodeEditor",
+        "answerType": "string",
+        "hintAnswer": [
+            "package main\n\nfunc main() {\n    for i := 1; i <= 3; i++ {\n        for j := 1; j <= i; j++ {\n            \n        }\n        \n    }\n}"
+        ],
+        "dependencies": [
+            "golang_loop_009a-h2"
+        ],
+        "title": "Perulangan Dalam untuk Kolom",
+        "text": "Di dalam perulangan luar, tambahkan perulangan dalam untuk menampilkan angka dari 1 sampai i",
+        "variabilization": {},
+        "oer": "",
+        "license": "",
+        "hintType": "code",
+        "language": "go",
+        "version": "1.16.2",
+        "filename": "main.go",
+        "expectedOutput": ""
+    },
+    {
+        "id": "golang_loop_009a-h4",
+        "type": "scaffold",
+        "problemType": "CodeEditor",
+        "answerType": "string",
+        "hintAnswer": [
+            "package main\n\nimport \"fmt\"\n\nfunc main() {\n    for i := 1; i <= 3; i++ {\n        for j := 1; j <= i; j++ {\n            fmt.Print(j)\n        }\n        fmt.Print(\" \")\n    }\n}"
+        ],
+        "dependencies": [
+            "golang_loop_009a-h3"
+        ],
+        "title": "Menampilkan Angka Berurutan",
+        "text": "Di dalam perulangan dalam, gunakan fmt.Print(j) untuk menampilkan angka j (bukan i) agar urut dari 1 dan import \"fmt\"",
+        "variabilization": {},
+        "oer": "",
+        "license": "",
+        "hintType": "code",
+        "language": "go",
+        "version": "1.16.2",
+        "filename": "main.go",
+        "expectedOutput": "1 12 123 "
+    }
+]

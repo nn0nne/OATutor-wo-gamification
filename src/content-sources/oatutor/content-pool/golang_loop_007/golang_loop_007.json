@@ -1,0 +1,10 @@
+{
+    "id": "golang_loop_007",
+    "title": "Menampilkan Bilangan Kelipatan 3 dari 3 sampai 10",
+    "body": "Buat program Golang yang menampilkan bilangan kelipatan 3 dari 3 sampai 10.",
+    "variabilization": {},
+    "oer": "https://example.com",
+    "license": "https://creativecommons.org/licenses/by/4.0/ <CC BY 4.0>",
+    "lesson": "Module 2 - Rekognisi Pola",
+    "courseName": "Golang Loops Course"
+}

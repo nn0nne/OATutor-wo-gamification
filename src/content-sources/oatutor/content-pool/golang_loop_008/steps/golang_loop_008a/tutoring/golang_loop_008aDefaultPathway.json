@@ -1,0 +1,66 @@
+[
+    {
+        "id": "golang_loop_008a-h1",
+        "type": "scaffold",
+        "problemType": "CodeEditor",
+        "answerType": "string",
+        "hintAnswer": [
+            "package main\n\nfunc main() {\n    \n}"
+        ],
+        "dependencies": [],
+        "title": "Struktur Program Dasar",
+        "text": "Pertama, buat struktur program Golang dasar dengan package main dan func main",
+        "variabilization": {},
+        "oer": "",
+        "license": "",
+        "hintType": "code",
+        "language": "go",
+        "version": "1.16.2",
+        "filename": "main.go",
+        "expectedOutput": ""
+    },
+    {
+        "id": "golang_loop_008a-h2",
+        "type": "scaffold",
+        "problemType": "CodeEditor",
+        "answerType": "string",
+        "hintAnswer": [
+            "package main\n\nfunc main() {\n    for i := 5; i >= 1; i-- {\n        \n    }\n}"
+        ],
+        "dependencies": [
+            "golang_loop_008a-h1"
+        ],
+        "title": "Perulangan For Decrement",
+        "text": "Gunakan perulangan for dengan variabel i mulai dari 5 turun sampai 1.",
+        "variabilization": {},
+        "oer": "",
+        "license": "",
+        "hintType": "code",
+        "language": "go",
+        "version": "1.16.2",
+        "filename": "main.go",
+        "expectedOutput": ""
+    },
+    {
+        "id": "golang_loop_008a-h3",
+        "type": "scaffold",
+        "problemType": "CodeEditor",
+        "answerType": "string",
+        "hintAnswer": [
+            "package main\n\nimport \"fmt\"\n\nfunc main() {\n    for i := 5; i >= 1; i-- {\n        fmt.Print(i*i*i, \" \")\n    }\n}"
+        ],
+        "dependencies": [
+            "golang_loop_008a-h2"
+        ],
+        "title": "Menghitung dan Menampilkan Pangkat Tiga",
+        "text": "Di dalam perulangan, gunakan fmt.Print(i*i*i, \" \") untuk menghitung pangkat tiga (i³) dan menampilkan hasilnya dengan spasi dan import \"fmt\"",
+        "variabilization": {},
+        "oer": "",
+        "license": "",
+        "hintType": "code",
+        "language": "go",
+        "version": "1.16.2",
+        "filename": "main.go",
+        "expectedOutput": "125 64 27 8 1 "
+    }
+]

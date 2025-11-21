@@ -1,0 +1,88 @@
+[
+    {
+        "id": "golang_loop_012a-h1",
+        "type": "scaffold",
+        "problemType": "CodeEditor",
+        "answerType": "string",
+        "hintAnswer": [
+            "package main\n\nfunc main() {\n    \n}"
+        ],
+        "dependencies": [],
+        "title": "Struktur Program Dasar",
+        "text": "Pertama, buat struktur program dasar dengan package main dan func main",
+        "variabilization": {},
+        "oer": "",
+        "license": "",
+        "hintType": "code",
+        "language": "go",
+        "version": "1.16.2",
+        "filename": "main.go",
+        "expectedOutput": ""
+    },
+    {
+        "id": "golang_loop_012a-h2",
+        "type": "scaffold",
+        "problemType": "CodeEditor",
+        "answerType": "string",
+        "hintAnswer": [
+            "package main\n\nfunc main() {\n    for i := 1; i <= 10; i++ {\n        \n    }\n}"
+        ],
+        "dependencies": [
+            "golang_loop_012a-h1"
+        ],
+        "title": "Perulangan untuk Iterasi Bilangan",
+        "text": "Tambahkan perulangan for dengan variabel i dari 1 sampai 10 untuk mengiterasi setiap bilangan",
+        "variabilization": {},
+        "oer": "",
+        "license": "",
+        "hintType": "code",
+        "language": "go",
+        "version": "1.16.2",
+        "filename": "main.go",
+        "expectedOutput": ""
+    },
+    {
+        "id": "golang_loop_012a-h3",
+        "type": "scaffold",
+        "problemType": "CodeEditor",
+        "answerType": "string",
+        "hintAnswer": [
+            "package main\n\nfunc main() {\n    jumlah := 0\n    for i := 1; i <= 10; i++ {\n        if i%2 == 0 {\n            jumlah = jumlah + i\n        }\n    }\n}"
+        ],
+        "dependencies": [
+            "golang_loop_012a-h2"
+        ],
+        "title": "Variabel dan Kalkulasi Bilangan Genap",
+        "text": "Tambahkan variabel jumlah dengan nilai 0. Di dalam perulangan, gunakan kondisi if i%2 == 0 untuk mengecek bilangan genap, dan tambahkan nilai i ke variabel jumlah",
+        "variabilization": {},
+        "oer": "",
+        "license": "",
+        "hintType": "code",
+        "language": "go",
+        "version": "1.16.2",
+        "filename": "main.go",
+        "expectedOutput": ""
+    },
+    {
+        "id": "golang_loop_012a-h4",
+        "type": "scaffold",
+        "problemType": "CodeEditor",
+        "answerType": "string",
+        "hintAnswer": [
+            "package main\n\nimport \"fmt\"\n\nfunc main() {\n    jumlah := 0\n    for i := 1; i <= 10; i++ {\n        if i%2 == 0 {\n            jumlah = jumlah + i\n        }\n    }\n    fmt.Print(jumlah)\n}"
+        ],
+        "dependencies": [
+            "golang_loop_012a-h3"
+        ],
+        "title": "Menampilkan Hasil",
+        "text": "Import package fmt dan tambahkan fmt.Print(jumlah) untuk menampilkan hasil akhir penjumlahan bilangan genap",
+        "variabilization": {},
+        "oer": "",
+        "license": "",
+        "hintType": "code",
+        "language": "go",
+        "version": "1.16.2",
+        "filename": "main.go",
+        "expectedOutput": "30"
+    }
+]

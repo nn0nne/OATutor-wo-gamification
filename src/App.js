@@ -1,0 +1,690 @@
+import React from "react";
+import "./App.css";
+import Platform from "./platform-logic/Platform.js";
+import DebugPlatform from "./platform-logic/DebugPlatform.js";
+import Firebase from "@components/Firebase.js";
+import { LocalizationProvider } from "./util/LocalizationContext";
+import {
+    AB_TEST_MODE
+} from "./config/config.js";
+
+import { HashRouter as Router, Route, Switch } from "react-router-dom";
+import NotFound from "@components/NotFound.js";
+
+import {
+    DO_FOCUS_TRACKING,
+    PROGRESS_STORAGE_KEY,
+    SITE_VERSION,
+    ThemeContext,
+    USER_ID_STORAGE_KEY,
+    findLessonById,
+    LESSON_PROGRESS_STORAGE_KEY,
+} from "./config/config.js";
+import {
+    createTheme,
+    responsiveFontSizes,
+    ThemeProvider,
+} from "@material-ui/core/styles";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+import parseJwt from "./util/parseJWT";
+import AssignmentNotLinked from "./pages/AssignmentNotLinked";
+import AssignmentAlreadyLinked from "./pages/AssignmentAlreadyLinked";
+import AssignmentFinished from "./pages/AssignmentFinished";
+import SessionExpired from "./pages/SessionExpired";
+import { Posts } from "./pages/Posts/Posts";
+import loadFirebaseEnvConfig from "./util/loadFirebaseEnvConfig";
+import generateRandomInt from "./util/generateRandomInt";
+import { cleanObjectKeys } from "./util/cleanObject";
+import GlobalErrorBoundary from "./components/GlobalErrorBoundary";
+import { IS_STAGING_OR_DEVELOPMENT } from "./util/getBuildType";
+import TabFocusTrackerWrapper from "./components/TabFocusTrackerWrapper";
+import ViewAllProblems from "./components/problem-layout/ViewAllProblems";
+
+// ### BEGIN CUSTOMIZABLE IMPORTS ###
+import config from "./config/firebaseConfig.js";
+import skillModel from "./content-sources/oatutor/skillModel.json";
+import defaultBKTParams from "./content-sources/oatutor/bkt-params/defaultBKTParams.json";
+import experimentalBKTParams from "./content-sources/oatutor/bkt-params/experimentalBKTParams.json";
+import { heuristic as defaultHeuristic } from "./models/BKT/problem-select-heuristics/defaultHeuristic.js";
+import { heuristic as experimentalHeuristic } from "./models/BKT/problem-select-heuristics/experimentalHeuristic.js";
+import BrowserStorage from "./util/browserStorage";
+import { doc, setDoc, updateDoc, collection, getDocs, deleteDoc, getDoc, deleteField } from 'firebase/firestore';
+import { getAuth, signInWithCustomToken } from 'firebase/auth';
+// ### END CUSTOMIZABLE IMPORTS ###
+
+loadFirebaseEnvConfig(config);
+
+let theme = createTheme();
+theme = responsiveFontSizes(theme);
+
+const queryParamToContext = {
+    token: "jwt",
+    lis_person_name_full: "studentName",
+    to: "alreadyLinkedLesson",
+    use_expanded_view: "use_expanded_view",
+    do_not_restore: "noRestore",
+    locale: "locale",
+    firebase_token: "firebaseToken"
+    // courseName: "courseName",
+    // courseId: "courseId",
+    // courseCode: "courseCode",
+};
+
+const queryParamsToKeep = ["use_expanded_view", "to", "do_not_restore", "locale"];
+
+let treatmentMapping;
+
+if (!AB_TEST_MODE) {
+    treatmentMapping = {
+        bktParams: cleanObjectKeys(defaultBKTParams),
+        heuristic: defaultHeuristic,
+        hintPathway: "DefaultPathway"
+    };
+} else {
+    treatmentMapping = {
+        bktParams: { 0: cleanObjectKeys(defaultBKTParams), 1: cleanObjectKeys(experimentalBKTParams) },
+        heuristic: { 0: defaultHeuristic, 1: experimentalHeuristic },
+        hintPathway: { 0: "DefaultPathway", 1: "DefaultPathway" }
+    };
+}
+
+class App extends React.Component {
+    constructor(props) {
+        super(props);
+        // UserID creation
+        let userId = null;
+        if (!userId) {
+            const search = window.location.search || window.location.hash.substr(window.location.hash.indexOf("?") + 1);
+            const sp = new URLSearchParams(search);
+            const jwt = sp.get("token");
+            if (jwt) {
+                const user = parseJwt(jwt);
+                userId = user?.sub || user?.user_id || null;
+            }
+        }
+        if (!userId) {
+            let userId = localStorage.getItem(USER_ID_STORAGE_KEY);
+            if (!userId) {
+                userId = generateRandomInt().toString();
+                localStorage.setItem(USER_ID_STORAGE_KEY, userId);
+            }
+        }
+        this.bktParams = this.getTreatmentObject(treatmentMapping.bktParams);
+
+        this.originalBktParams = JSON.parse(
+            JSON.stringify(this.getTreatmentObject(treatmentMapping.bktParams))
+        );
+
+        this.state = {
+            additionalContext: {},
+            userID: userId
+        };
+
+        if (IS_STAGING_OR_DEVELOPMENT) {
+            document["oats-meta-site-hash"] = process.env.REACT_APP_COMMIT_HASH;
+            document["oats-meta-site-updatetime"] =
+                process.env.REACT_APP_BUILD_TIMESTAMP;
+        }
+
+        const onLocationChange = () => {
+            const additionalContext = {};
+            const search =
+                window.location.search ||
+                window.location.hash.substr(
+                    window.location.hash.indexOf("?") + 1
+                );
+            const sp = new URLSearchParams(search);
+
+            Object.keys(queryParamToContext).forEach((qp) => {
+                const ctxKey = queryParamToContext[qp];
+                const ctxValue = sp.get(qp);
+                if (ctxValue !== null) {
+                    additionalContext[ctxKey] = ctxValue;
+                }
+            });
+
+            if (additionalContext?.jwt) {
+                const user = parseJwt(additionalContext.jwt);
+                additionalContext["user"] = user;
+                additionalContext["studentName"] = user.full_name;
+                // additionalContext["courseName"] = user.course_name || additionalContext.courseName || "";
+                // additionalContext["courseId"] = user.course_id || additionalContext.courseId || "";
+                // additionalContext["courseCode"] = user.course_code || additionalContext.courseCode || "";
+            }
+
+            if (additionalContext?.firebaseToken) {
+                const auth = getAuth();
+                (async () => {
+                    try {
+                        const userCredential = await signInWithCustomToken(auth, additionalContext.firebaseToken);
+                        const firebaseUser = userCredential.user;
+                        console.log("Firebase sign-in successful:", firebaseUser.uid);
+                        this.setState({
+                            userID: firebaseUser.uid,
+                            additionalContext: {
+                                ...additionalContext,
+                                firebaseUser,
+                            }
+                        })
+                    } catch (error) {
+                        console.error("Firebase custom token sign-in failed:", error);
+                        toast.error("Failed to authenticate with Firebase.")
+                    }
+                })();
+            }
+
+            // Firebase creation
+            this.firebase = new Firebase(
+                this.state.userID,
+                config,
+                this.getTreatment(),
+                SITE_VERSION,
+                additionalContext.user
+            );
+
+
+            const auth = getAuth();
+            if (auth.currentUser) {
+                userId = auth.currentUser.uid;
+            }
+
+            let targetLocation = window.location.href.split("?")[0];
+
+            const contextToKeep = queryParamsToKeep.map(
+                (qp) => queryParamToContext[qp] || qp
+            );
+            const contextToParam = Object.fromEntries(
+                Object.entries(queryParamToContext).map(([key, val]) => [
+                    val,
+                    key,
+                ])
+            );
+            const keptQueryParamsObj = Object.fromEntries(
+                Object.entries(additionalContext)
+                    .filter(([key, _]) => contextToKeep.includes(key))
+                    .map(([key, val]) => [contextToParam[key] || key, val])
+            );
+            const keptQueryParams = new URLSearchParams(keptQueryParamsObj);
+
+            if (Object.keys(keptQueryParamsObj).length > 0) {
+                targetLocation += `?${keptQueryParams.toString()}`;
+            }
+
+            if (this.mounted) {
+                this.setState((prev) => ({
+                    additionalContext: {
+                        ...prev.additionalContext,
+                        ...additionalContext,
+                    },
+                }));
+                window.history.replaceState({}, document.title, targetLocation);
+            } else if (this.mounted === undefined) {
+                this.state = {
+                    ...this.state,
+                    additionalContext,
+                };
+                window.history.replaceState({}, document.title, targetLocation);
+            }
+        };
+        window.addEventListener("popstate", onLocationChange);
+        onLocationChange();
+
+        this.browserStorage = new BrowserStorage(this);
+
+        this.saveProgress = this.saveProgress.bind(this);
+    }
+
+    componentDidMount() {
+        this.mounted = true;
+    }
+
+    componentWillUnmount() {
+        this.mounted = false;
+    }
+
+    getTreatment = () => {
+        return this.state.userID % 2;
+    };
+
+    getTreatmentObject = (targetObject) => {
+        if (!AB_TEST_MODE) {
+            return targetObject;
+        }
+        return targetObject[this.getTreatment()];
+    };
+
+    removeProgress = async () => {
+
+        //localforage
+        const { getKeys, removeByKey } = this.browserStorage;
+        await removeByKey(PROGRESS_STORAGE_KEY);
+        const existingKeys = (await getKeys()) || [];
+        const lessonStorageKeys = existingKeys.filter((key) =>
+            key.startsWith(PROGRESS_STORAGE_KEY)
+        );
+        await Promise.allSettled(
+            lessonStorageKeys.map(async (key) => await removeByKey(key))
+        );
+
+        //firebase
+        const firebase = this.firebase;
+        const userId = this.state.userID;
+        console.log("removeProgress - App.js", {
+            userId,
+        });
+        if (userId) {
+            try {
+                const bktProgressRef = doc(firebase.db, 'users', userId, 'bktParams', 'progress');
+                const bktProgressDoc = await getDoc(bktProgressRef);
+
+                if (bktProgressDoc.exists()) {
+                    await updateDoc(bktProgressRef, {
+                        bktParams: deleteField()
+                    });
+                }
+
+                const lessonRef = collection(firebase.db, 'users', userId, 'lessons');
+                const querySnapshot = await getDocs(lessonRef);
+                await Promise.all(querySnapshot.docs.map((d) => deleteDoc(d.ref)));
+                console.debug("Removed all progress from Firebase successfully");
+            } catch (error) {
+                console.error("Error removing progress from Firebase:", error);
+            }
+        }
+
+        this.bktParams = this.getTreatmentObject(treatmentMapping.bktParams);
+        window.location.reload();
+    };
+
+    removeLessonProgress = async (lessonId) => {
+        const firebase = this.firebase;
+        const userId = this.state.userID;
+        const resourceLinkId = this.state.additionalContext?.user?.resource_link_id;
+
+        console.log("removeLessonProgress - App.js", {
+            userId,
+            lessonId,
+            resourceLinkId
+        });
+
+        if (userId && lessonId) {
+            try {
+                // 1. Hapus progress lesson dari Firebase
+                const progressDocId = resourceLinkId
+                    ? `${lessonId}_${resourceLinkId}`
+                    : lessonId;
+
+                const lessonRef = doc(firebase.db, 'users', userId, 'lessons', progressDocId);
+                await setDoc(lessonRef, {
+                    mastery: 0, // Reset mastery ke 0
+                    completedProbs: [], // Kosongkan completed problems
+                }, { merge: true }); // Gunakan merge: true untuk tidak overwrite field lainnya
+
+                // 2. Reset BKT parameters untuk skills yang terkait lesson ini
+                const lesson = findLessonById(lessonId);
+                if (lesson && lesson.learningObjectives) {
+                    const objectives = Object.keys(lesson.learningObjectives);
+
+                    // Reset BKT params untuk skills lesson ini ke nilai default
+                    objectives.forEach(skill => {
+                        if (this.bktParams[skill] && this.originalBktParams[skill]) {
+                            this.bktParams[skill] = { ...this.originalBktParams[skill] };
+                        }
+                    });
+
+                    // 3. Hapus BKT progress untuk skills ini dari Firebase
+                    const bktProgressRef = doc(firebase.db, 'users', userId, 'bktParams', 'progress');
+                    const bktProgressDoc = await getDoc(bktProgressRef);
+
+                    if (bktProgressDoc.exists()) {
+                        const bktData = bktProgressDoc.data();
+                        console.log('📊 Current BKT data in Firebase:', bktData);
+
+                        const updateData = {};
+                        let foundSkills = 0;
+
+                        // Skill langsung di root document, bukan dalam bktParams
+                        objectives.forEach(skill => {
+                            if (bktData[skill]) { // ← PERUBAHAN PENTING: bktData[skill] bukan bktData.bktParams[skill]
+                                updateData[skill] = deleteField();
+                                foundSkills++;
+                                console.log(`🗑️  Marked for deletion: ${skill}`);
+                            } else {
+                                console.log(`⚠️  Skill not found in Firebase: ${skill}`);
+                            }
+                        });
+
+                        console.log('📝 Update data to send:', updateData);
+                        console.log(`🔍 Found ${foundSkills} skills to delete from Firebase`);
+
+                        if (Object.keys(updateData).length > 0) {
+                            await updateDoc(bktProgressRef, updateData);
+                            console.log('✅ BKT progress removed from Firebase for skills:', Object.keys(updateData));
+
+                            // Verifikasi setelah delete
+                            const afterDeleteDoc = await getDoc(bktProgressRef);
+                            console.log('🔍 After deletion - BKT data:', afterDeleteDoc.data());
+                        } else {
+                            console.log('ℹ️  No BKT skills found to delete from Firebase');
+                        }
+                    } else {
+                        console.log('ℹ️  No BKT progress document found in Firebase');
+                    }
+
+                    // 4. Simpan perubahan BKT params
+                    await this.saveProgress();
+                }
+
+                // 5. Hapus dari local storage
+                const { removeByKey } = this.browserStorage;
+                await removeByKey(LESSON_PROGRESS_STORAGE_KEY(lessonId));
+
+                console.debug(`Removed progress for lesson ${lessonId} successfully`);
+                toast.success(`Progress for lesson has been reset`);
+
+                return true;
+            } catch (error) {
+                console.error(`Error removing progress for lesson ${lessonId}:`, error);
+                toast.error("Failed to reset lesson progress");
+                return false;
+            }
+        }
+    };
+
+    saveProgress = async () => {
+        console.debug("saving progress");
+
+        const progressedBktParams = Object.fromEntries(
+            // only add to db if it is not the same as originally provided bkt params
+            Object.entries(this.bktParams || {}).filter(([key, val]) => {
+                // console.debug(this.originalBktParams[key]?.probMastery, 'vs.', val.probMastery)
+                return (
+                    this.originalBktParams[key]?.probMastery !== val.probMastery
+                );
+            })
+        );
+
+        //localforage
+        const { setByKey } = this.browserStorage;
+        setByKey(PROGRESS_STORAGE_KEY, progressedBktParams, (err) => {
+            if (err) {
+                console.debug("save progress error: ", err);
+                toast.warn("Unable to save mastery progress :(", {
+                    toastId: "unable_to_save_progress",
+                });
+            } else {
+                console.debug("saved progress successfully");
+            }
+        }).then((_) => { });
+
+        //firebase
+        const firebase = this.firebase;
+        const userId = this.state.userID;
+        // const currentCourse = this.state.additionalContext?.courseName || "";
+        // const currentCourseId = this.state.additionalContext?.courseId || "";
+        // const currentCourseCode = this.state.additionalContext?.courseCode || "";
+
+        if (userId) {
+            try {
+                const userRef = doc(firebase.db, 'users', userId);
+                const bktProgressRef = doc(firebase.db, 'users', userId, 'bktParams', 'progress');
+                await Promise.all([
+                    setDoc(bktProgressRef,
+                        progressedBktParams,
+                        { merge: true }),
+                    setDoc(userRef, {
+                        studentName: this.state.additionalContext?.studentName ||
+                            this.state.additionalContext?.user?.full_name ||
+                            "Anonymous Student",
+                    }, { merge: true })
+                ])
+                console.debug("Saved progress to Firebase successfully");
+            } catch (error) {
+                console.error("Error saving progress to Firebase:", error);
+                toast.warn("Unable to sync progress to the cloud :(", {
+                    toastId: "unable_to_sync_progress",
+                });
+
+            }
+        }
+    };
+
+    loadBktProgress = async () => {
+        //firebase
+        const firebase = this.firebase;
+        const userId = this.state.userID;
+        console.log("loadBKTProress - App.js", {
+            userId,
+        });
+        if (userId) {
+            try {
+                const bktProgressRef = doc(firebase.db, 'users', userId, 'bktParams', 'progress');
+                const docSnap = await getDoc(bktProgressRef);
+                if (docSnap.exists() && docSnap.data().bktParams) {
+                    const cloudProgress = docSnap.data().bktParams;
+                    console.debug("Restored BKT progress from cloud:", cloudProgress);
+                    Object.assign(this.bktParams, cleanObjectKeys(cloudProgress));
+                    return;
+                }
+            } catch (error) {
+                console.debug("Error getting BKT progress from cloud:", error);
+            }
+        }
+
+        //localforage
+        const { getByKey } = this.browserStorage;
+        const progress = await getByKey(PROGRESS_STORAGE_KEY).catch((_e) => {
+            console.debug("error with getting previous progress", _e);
+        });
+        if (
+            progress == null ||
+            typeof progress !== "object" ||
+            Object.keys(progress).length === 0
+        ) {
+            console.debug(
+                "resetting progress... obtained progress was invalid: ",
+                progress
+            );
+            this.bktParams = this.getTreatmentObject(
+                treatmentMapping.bktParams
+            );
+        } else {
+            console.debug(
+                "restoring progress from before (raw, uncleaned): ",
+                progress
+            );
+            Object.assign(this.bktParams, cleanObjectKeys(progress));
+        }
+    };
+
+    render() {
+        return (
+            <ThemeProvider theme={theme}>
+                <ThemeContext.Provider
+                    value={{
+                        userID: this.state.userID,
+                        firebase: this.firebase,
+                        getTreatment: this.getTreatment,
+                        bktParams: this.bktParams,
+                        heuristic: this.getTreatmentObject(
+                            treatmentMapping.heuristic
+                        ),
+                        hintPathway: this.getTreatmentObject(
+                            treatmentMapping.hintPathway
+                        ),
+                        skillModel,
+                        credentials: config,
+                        debug: false,
+                        studentName: "",
+                        alreadyLinkedLesson: "",
+                        jwt: "",
+                        user: {},
+                        problemID: "n/a",
+                        problemIDs: null,
+                        ...this.state.additionalContext,
+                        browserStorage: this.browserStorage,
+                        removeLessonProgress: this.removeLessonProgress,
+                    }}
+                >
+                    <LocalizationProvider>
+                        <GlobalErrorBoundary>
+                            <Router>
+                                <div className="Router">
+                                    <Switch>
+                                        <Route
+                                            exact
+                                            path="/"
+                                            render={(props) => (
+                                                <Platform
+                                                    key={Date.now()}
+                                                    saveProgress={() =>
+                                                        this.saveProgress()
+                                                    }
+                                                    loadBktProgress={
+                                                        this.loadBktProgress
+                                                    }
+                                                    removeProgress={
+                                                        this.removeProgress
+                                                    }
+                                                    {...props}
+                                                />
+                                            )}
+                                        />
+                                        <Route
+                                            path="/courses/:courseNum"
+                                            render={(props) => (
+                                                <Platform
+                                                    key={Date.now()}
+                                                    saveProgress={() =>
+                                                        this.saveProgress()
+                                                    }
+                                                    loadBktProgress={
+                                                        this.loadBktProgress
+                                                    }
+                                                    removeProgress={
+                                                        this.removeProgress
+                                                    }
+                                                    courseNum={
+                                                        props.match.params.courseNum
+                                                    }
+                                                    {...props}
+                                                />
+                                            )}
+                                        />
+                                        <Route
+                                            exact
+                                            path="/lessons/:lessonID/problems"
+                                            component={ViewAllProblems}
+                                        />
+                                        <Route
+                                            exact
+                                            path="/lessons/:lessonID"
+                                            render={(props) => (
+                                                <Platform
+                                                    key={Date.now()}
+                                                    saveProgress={() =>
+                                                        this.saveProgress()
+                                                    }
+                                                    loadBktProgress={
+                                                        this.loadBktProgress
+                                                    }
+                                                    removeProgress={
+                                                        this.removeProgress
+                                                    }
+                                                    lessonID={
+                                                        props.match.params.lessonID
+                                                    }
+                                                    {...props}
+                                                />
+                                            )}
+                                        />
+                                        <Route
+                                            path="/debug/:problemID"
+                                            render={(props) => (
+                                                <DebugPlatform
+                                                    key={Date.now()}
+                                                    saveProgress={() =>
+                                                        this.saveProgress()
+                                                    }
+                                                    loadBktProgress={
+                                                        this.loadBktProgress
+                                                    }
+                                                    removeProgress={
+                                                        this.removeProgress
+                                                    }
+                                                    problemID={
+                                                        props.match.params.problemID
+                                                    }
+                                                    {...props}
+                                                />
+                                            )}
+                                        />
+                                        <Route
+                                            path="/posts"
+                                            render={(props) => (
+                                                <Posts
+                                                    key={Date.now()}
+                                                    {...props}
+                                                />
+                                            )}
+                                        />
+                                        <Route
+                                            exact
+                                            path="/assignment-not-linked"
+                                            render={(props) => (
+                                                <AssignmentNotLinked
+                                                    key={Date.now()}
+                                                    {...props}
+                                                />
+                                            )}
+                                        />
+                                        <Route
+                                            exact
+                                            path="/assignment-already-linked"
+                                            render={(props) => (
+                                                <AssignmentAlreadyLinked
+                                                    key={Date.now()}
+                                                    {...props}
+                                                />
+                                            )}
+                                        />
+                                        <Route
+                                            exact
+                                            path="/assignment-finished"
+                                            render={(props) => (
+                                                <AssignmentFinished
+                                                    key={Date.now()}
+                                                    {...props}
+                                                />
+                                            )}
+                                        />
+                                        <Route
+                                            exact
+                                            path="/session-expired"
+                                            render={(props) => (
+                                                <SessionExpired
+                                                    key={Date.now()}
+                                                    {...props}
+                                                />
+                                            )}
+                                        />
+                                        <Route component={NotFound} />
+                                    </Switch>
+                                </div>
+                                {DO_FOCUS_TRACKING && <TabFocusTrackerWrapper />}
+                            </Router>
+                            <ToastContainer
+                                autoClose={false}
+                                closeOnClick={false}
+                            />
+                        </GlobalErrorBoundary>
+                    </LocalizationProvider>
+                </ThemeContext.Provider>
+            </ThemeProvider>
+        );
+    }
+}
+
+export default App;

@@ -1,0 +1,88 @@
+[
+    {
+        "id": "golang_loop_011a-h1",
+        "type": "scaffold",
+        "problemType": "CodeEditor",
+        "answerType": "string",
+        "hintAnswer": [
+            "package main\n\nfunc main() {\n    \n}"
+        ],
+        "dependencies": [],
+        "title": "Struktur Program Dasar",
+        "text": "Pertama, buat struktur program dasar dengan package main dan func main",
+        "variabilization": {},
+        "oer": "",
+        "license": "",
+        "hintType": "code",
+        "language": "go",
+        "version": "1.16.2",
+        "filename": "main.go",
+        "expectedOutput": ""
+    },
+    {
+        "id": "golang_loop_011a-h2",
+        "type": "scaffold",
+        "problemType": "CodeEditor",
+        "answerType": "string",
+        "hintAnswer": [
+            "package main\n\nimport \"fmt\"\n\nfunc main() {\n    fmt.Print(\"0 \")\n}"
+        ],
+        "dependencies": [
+            "golang_loop_011a-h1"
+        ],
+        "title": "Menampilkan Suku Pertama",
+        "text": "Import package fmt dan tampilkan suku pertama Fibonacci (0) dengan fmt.Print(\"0 \")",
+        "variabilization": {},
+        "oer": "",
+        "license": "",
+        "hintType": "code",
+        "language": "go",
+        "version": "1.16.2",
+        "filename": "main.go",
+        "expectedOutput": "0 "
+    },
+    {
+        "id": "golang_loop_011a-h3",
+        "type": "scaffold",
+        "problemType": "CodeEditor",
+        "answerType": "string",
+        "hintAnswer": [
+            "package main\n\nimport \"fmt\"\n\nfunc main() {\n    fmt.Print(\"0 \")\n    for i := 1; i < 5; i++ {\n        \n    }\n}"
+        ],
+        "dependencies": [
+            "golang_loop_011a-h2"
+        ],
+        "title": "Perulangan untuk Suku Berikutnya",
+        "text": "Tambahkan perulangan for dengan variabel i dari 1 sampai 4 (5-1) untuk menampilkan suku berikutnya",
+        "variabilization": {},
+        "oer": "",
+        "license": "",
+        "hintType": "code",
+        "language": "go",
+        "version": "1.16.2",
+        "filename": "main.go",
+        "expectedOutput": ""
+    },
+    {
+        "id": "golang_loop_011a-h4",
+        "type": "scaffold",
+        "problemType": "CodeEditor",
+        "answerType": "string",
+        "hintAnswer": [
+            "package main\n\nimport \"fmt\"\n\nfunc main() {\n    a, b := 0, 1\n    fmt.Print(\"0 \")\n    for i := 1; i < 5; i++ {\n        fmt.Print(b, \" \")\n        a, b = b, a+b\n    }\n}"
+        ],
+        "dependencies": [
+            "golang_loop_011a-h3"
+        ],
+        "title": "Variabel Fibonacci dan Perhitungan",
+        "text": "Tambahkan variabel a=0 dan b=1 sebagai dua suku pertama Fibonacci sebelum loop. Di dalam perulangan, tampilkan nilai b dan update nilai a dan b: a menjadi b, dan b menjadi a+b untuk suku berikutnya",
+        "variabilization": {},
+        "oer": "",
+        "license": "",
+        "hintType": "code",
+        "language": "go",
+        "version": "1.16.2",
+        "filename": "main.go",
+        "expectedOutput": "0 1 1 2 3 "
+    }
+]

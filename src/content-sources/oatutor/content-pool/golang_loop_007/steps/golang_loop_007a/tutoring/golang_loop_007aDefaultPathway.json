@@ -1,0 +1,88 @@
+[
+    {
+        "id": "golang_loop_007a-h1",
+        "type": "scaffold",
+        "problemType": "CodeEditor",
+        "answerType": "string",
+        "hintAnswer": [
+            "package main\n\nfunc main() {\n    \n}"
+        ],
+        "dependencies": [],
+        "title": "Struktur Program Dasar",
+        "text": "Pertama, buat struktur program Golang dasar dengan package main dan func main",
+        "variabilization": {},
+        "oer": "",
+        "license": "",
+        "hintType": "code",
+        "language": "go",
+        "version": "1.16.2",
+        "filename": "main.go",
+        "expectedOutput": ""
+    },
+    {
+        "id": "golang_loop_007a-h2",
+        "type": "scaffold",
+        "problemType": "CodeEditor",
+        "answerType": "string",
+        "hintAnswer": [
+            "package main\n\nfunc main() {\n    for i := 3; i <= 10; i++ {\n        \n    }\n}"
+        ],
+        "dependencies": [
+            "golang_loop_007a-h1"
+        ],
+        "title": "Perulangan dari 3 sampai 10",
+        "text": "Gunakan perulangan for dengan variabel i mulai dari 3 sampai 10",
+        "variabilization": {},
+        "oer": "",
+        "license": "",
+        "hintType": "code",
+        "language": "go",
+        "version": "1.16.2",
+        "filename": "main.go",
+        "expectedOutput": ""
+    },
+    {
+        "id": "golang_loop_007a-h3",
+        "type": "scaffold",
+        "problemType": "CodeEditor",
+        "answerType": "string",
+        "hintAnswer": [
+            "package main\n\nfunc main() {\n    for i := 3; i <= 10; i++ {\n        if i%3 == 0 {\n            \n        }\n    }\n}"
+        ],
+        "dependencies": [
+            "golang_loop_007a-h2"
+        ],
+        "title": "Kondisi Kelipatan 3 dengan Modulo",
+        "text": "Di dalam perulangan, gunakan kondisi if i%3 == 0 untuk mengecek apakah bilangan i adalah kelipatan 3",
+        "variabilization": {},
+        "oer": "",
+        "license": "",
+        "hintType": "code",
+        "language": "go",
+        "version": "1.16.2",
+        "filename": "main.go",
+        "expectedOutput": ""
+    },
+    {
+        "id": "golang_loop_007a-h4",
+        "type": "scaffold",
+        "problemType": "CodeEditor",
+        "answerType": "string",
+        "hintAnswer": [
+            "package main\n\nimport \"fmt\"\n\nfunc main() {\n    for i := 3; i <= 10; i++ {\n        if i%3 == 0 {\n            fmt.Print(i, \" \")\n        }\n    }\n}"
+        ],
+        "dependencies": [
+            "golang_loop_007a-h3"
+        ],
+        "title": "Menampilkan Output",
+        "text": "Di dalam kondisi if, gunakan fmt.Print(i, \" \") untuk menampilkan angka kelipatan 3 dan spasi, dan juga import \"fmt\"",
+        "variabilization": {},
+        "oer": "",
+        "license": "",
+        "hintType": "code",
+        "language": "go",
+        "version": "1.16.2",
+        "filename": "main.go",
+        "expectedOutput": "3 6 9 "
+    }
+]

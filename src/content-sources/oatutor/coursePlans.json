@@ -1,0 +1,36 @@
+[
+    {
+        "courseName": "Golang Loops Course",
+        "courseOER": "https://example.org/",
+        "courseLicense": "https://creativecommons.org/licenses/by/4.0/ <CC BY 4.0>",
+        "lessons": [
+            {
+                "id": "golang-loop-lesson-1",
+                "name": "Module 1 - Fundamental Loop",
+                "topics": "Basic Loop Structures in Golang",
+                "allowRecycle": true,
+                "learningObjectives": {
+                    "golang_loop_fundamentals": 0.85
+                }
+            },
+            {
+                "id": "golang-loop-lesson-2",
+                "name": "Module 2 - Rekognisi Pola",
+                "topics": "Pattern Recognition with Loops",
+                "allowRecycle": true,
+                "learningObjectives": {
+                    "golang_pattern_recognition": 0.85
+                }
+            },
+            {
+                "id": "golang-loop-lesson-3",
+                "name": "Module 3 - Problem Solving",
+                "topics": "Advanced Problem Solving with Loops",
+                "allowRecycle": true,
+                "learningObjectives": {
+                    "golang_problem_solving": 0.85
+                }
+            }
+        ]
+    }
+]

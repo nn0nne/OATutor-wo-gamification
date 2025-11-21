@@ -1,0 +1,10 @@
+{
+    "id": "golang_loop_009",
+    "title": "Menampilkan Pola Segitiga Angka Rata Kiri",
+    "body": "Buat program Golang yang menampilkan pola segitiga angka dengan angka berurutan di setiap baris.",
+    "variabilization": {},
+    "oer": "https://example.com",
+    "license": "https://creativecommons.org/licenses/by/4.0/ <CC BY 4.0>",
+    "lesson": "Module 2 - Rekognisi Pola",
+    "courseName": "Golang Loops Course"
+}

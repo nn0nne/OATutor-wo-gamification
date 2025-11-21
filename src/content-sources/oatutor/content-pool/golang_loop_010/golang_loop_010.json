@@ -1,0 +1,10 @@
+{
+    "id": "golang_loop_010",
+    "title": "Menghitung Faktorial",
+    "body": "Buat program Golang yang menghitung faktorial dari angka 5.",
+    "variabilization": {},
+    "oer": "https://example.com",
+    "license": "https://creativecommons.org/licenses/by/4.0/ <CC BY 4.0>",
+    "lesson": "Module 3 - Problem Solving",
+    "courseName": "Golang Loops Course"
+}

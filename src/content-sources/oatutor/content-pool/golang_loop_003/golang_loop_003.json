@@ -1,0 +1,10 @@
+{
+    "id": "golang_loop_003",
+    "title": "Menghitung Jumlah Pengurangan",
+    "body": "Buat program Golang yang menghitung hasil pengurangan beruntun dari 1 sampai 5. Rumus: 1 - 2 - 3 - 4 - 5",
+    "variabilization": {},
+    "oer": "https://example.com",
+    "license": "https://creativecommons.org/licenses/by/4.0/ <CC BY 4.0>",
+    "lesson": "Module 1 - Fundamental Loop",
+    "courseName": "Golang Loops Course"
+}

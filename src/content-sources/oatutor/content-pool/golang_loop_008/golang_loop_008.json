@@ -1,0 +1,10 @@
+{
+    "id": "golang_loop_008",
+    "title": "Menampilkan Pola Pangkat Tiga Terbalik",
+    "body": "Buat program Golang yang menampilkan pola pangkat tiga dari angka 5 sampai 1 secara terbalik.",
+    "variabilization": {},
+    "oer": "https://example.com",
+    "license": "https://creativecommons.org/licenses/by/4.0/ <CC BY 4.0>",
+    "lesson": "Module 2 - Rekognisi Pola",
+    "courseName": "Golang Loops Course"
+}

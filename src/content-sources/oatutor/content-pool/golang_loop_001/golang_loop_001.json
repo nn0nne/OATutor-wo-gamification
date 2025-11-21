@@ -1,0 +1,10 @@
+{
+    "id": "golang_loop_001",
+    "title": "Menampilkan Angka 1 sampai 5",
+    "body": "Buat program Golang yang menampilkan angka dari 1 sampai 5.",
+    "variabilization": {},
+    "oer": "https://example.com",
+    "license": "https://creativecommons.org/licenses/by/4.0/ <CC BY 4.0>",
+    "lesson": "Module 1 - Fundamental Loop",
+    "courseName": "Golang Loops Course"
+}

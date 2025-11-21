@@ -1,0 +1,14 @@
+{
+    "id": "golang_loop_006a",
+    "stepAnswer": [
+        "1 22 333 "
+    ],
+    "problemType": "CodeEditor",
+    "stepTitle": "Tampilkan pola angka berulang per baris",
+    "stepBody": "Buat program Golang yang menampilkan output: \"1 22 333 \" (tanpa kutip)",
+    "answerType": "string",
+    "variabilization": {},
+    "language": "go",
+    "version": "1.16.2",
+    "filename": "main.go"
+}
